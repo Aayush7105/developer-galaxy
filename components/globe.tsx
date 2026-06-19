@@ -5,10 +5,7 @@ import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 
 // ---------------------------------------------------------------------------
-// Fix #4: useLoader throws a real error (not just a pending Suspense promise)
-// when the texture fails to load (e.g. a 404). Suspense alone does NOT catch
-// that — it only handles the "still loading" state. Without this boundary,
-// a missing/misnamed image file crashes the entire React tree.
+// GlobeErrorBoundary: Handles texture load failures.
 // ---------------------------------------------------------------------------
 class GlobeErrorBoundary extends Component {
   constructor(props) {
@@ -48,15 +45,15 @@ class GlobeErrorBoundary extends Component {
 }
 
 const GlobeModel = () => {
-  const pointsRef = useRef(null);
+  const groupRef = useRef(null);
+  const ringRef = useRef(null);
 
-  // Fix #1: must be root-relative ("/earth-mask.png") to resolve correctly
-  // from /public on every route. "./earth-mask.png" resolves relative to
-  // the current page URL and breaks on any non-root route.
+  // Path preserved as requested
   const mapTexture = useLoader(THREE.TextureLoader, "/earth-mask.png");
 
   const [pointsData, setPointsData] = useState(null);
-  const [pointCount, setPointCount] = useState(0);
+  const [landCount, setLandCount] = useState(0);
+  const [oceanCount, setOceanCount] = useState(0);
 
   useEffect(() => {
     if (!mapTexture || !mapTexture.image) return;
@@ -71,10 +68,6 @@ const GlobeModel = () => {
 
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
 
-    // Fix #2: auto-detect whether the mask encodes land via real alpha
-    // transparency or via pixel brightness on an opaque image, instead of
-    // OR-ing both checks together (which silently selects every pixel
-    // whenever the source has no real transparency).
     let hasTransparency = false;
     for (let i = 3; i < imageData.length; i += 4 * 97) {
       if (imageData[i] < 250) {
@@ -85,13 +78,8 @@ const GlobeModel = () => {
 
     const count = 25000;
     const radius = 2.5;
-    const positions = [];
-
-    // Fix #3: proper golden-angle Fibonacci sphere distribution. This
-    // parameterizes y linearly from 1 to -1 (no pole singularities) and
-    // spaces points using the golden angle, which is what actually
-    // produces an even distribution — the original "sqrt(count*PI)*phi"
-    // formula wasn't a real spiral formula at all.
+    const landPositions = [];
+    const oceanPositions = [];
     const goldenAngle = Math.PI * (3 - Math.sqrt(5));
 
     for (let i = 0; i < count; i++) {
@@ -102,9 +90,8 @@ const GlobeModel = () => {
       const xUnit = Math.cos(theta) * radiusAtY;
       const zUnit = Math.sin(theta) * radiusAtY;
 
-      // Standard equirectangular UV mapping (matches three.js SphereGeometry).
       const u = 0.5 + Math.atan2(zUnit, xUnit) / (2 * Math.PI);
-      const yClamped = Math.min(1, Math.max(-1, yUnit)); // guard asin domain
+      const yClamped = Math.min(1, Math.max(-1, yUnit));
       const v = 0.5 - Math.asin(yClamped) / Math.PI;
 
       const pixelX = Math.min(img.width - 1, Math.floor(u * img.width));
@@ -121,62 +108,95 @@ const GlobeModel = () => {
       const isLand = hasTransparency ? alpha > 128 : brightness > 128;
 
       if (isLand) {
-        positions.push(xUnit * radius, yUnit * radius, zUnit * radius);
+        landPositions.push(xUnit * radius, yUnit * radius, zUnit * radius);
+      } else {
+        oceanPositions.push(xUnit * radius, yUnit * radius, zUnit * radius);
       }
     }
 
-    setPointsData(new Float32Array(positions));
-    setPointCount(positions.length / 3);
+    setPointsData({
+      land: new Float32Array(landPositions),
+      ocean: new Float32Array(oceanPositions),
+    });
+    setLandCount(landPositions.length / 3);
+    setOceanCount(oceanPositions.length / 3);
   }, [mapTexture]);
 
-  useFrame(() => {
-    if (pointsRef.current) {
-      pointsRef.current.rotation.y += 0.002;
+  useFrame((state) => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y += 0.002;
+    }
+    // Make the ring outline always face the camera (Billboarding)
+    if (ringRef.current) {
+      ringRef.current.quaternion.copy(state.camera.quaternion);
     }
   });
 
-  if (!pointsData) return null;
-
-  // Fix #5: if the mask check yields nothing, fail loudly in the console
-  // instead of silently rendering an empty scene with no clue why.
-  if (pointCount === 0) {
-    console.warn(
-      "Globe: no points matched the mask. Check earth-mask.png contrast/format.",
-    );
-    return null;
-  }
+  if (!pointsData || landCount === 0) return null;
 
   return (
     <group position={[0, -2.5, 0]}>
-      <points ref={pointsRef}>
-        <bufferGeometry>
-          <bufferAttribute
-            key={pointsData.length}
-            attach="attributes-position"
-            count={pointCount}
-            array={pointsData}
-            itemSize={3}
-          />
-        </bufferGeometry>
-        <pointsMaterial
-          color="#34d399"
-          size={0.02}
-          sizeAttenuation={true}
-          transparent={true}
-          opacity={0.8}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
-      </points>
+      {/* Container for rotating elements */}
+      <group ref={groupRef}>
+        {/* Ocean Layer */}
+        {oceanCount > 0 && (
+          <points>
+            <bufferGeometry>
+              <bufferAttribute
+                key={`ocean-${pointsData.ocean.length}`}
+                attach="attributes-position"
+                count={oceanCount}
+                array={pointsData.ocean}
+                itemSize={3}
+              />
+            </bufferGeometry>
+            <pointsMaterial
+              color="#34d399"
+              size={0.012}
+              transparent
+              opacity={0.15}
+              depthWrite={false}
+            />
+          </points>
+        )}
 
-      {/* Subtle glow inside to give it volume */}
-      <mesh>
-        <sphereGeometry args={[2.48, 32, 32]} />
+        {/* Land Layer */}
+        <points>
+          <bufferGeometry>
+            <bufferAttribute
+              key={`land-${pointsData.land.length}`}
+              attach="attributes-position"
+              count={landCount}
+              array={pointsData.land}
+              itemSize={3}
+            />
+          </bufferGeometry>
+          <pointsMaterial
+            color="#34d399"
+            size={0.02}
+            transparent
+            opacity={0.8}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+          />
+        </points>
+
+        {/* Inner shadow/mask sphere to avoid backside clutter */}
+        <mesh>
+          <sphereGeometry args={[2.48, 32, 32]} />
+          <meshBasicMaterial color="#000" transparent opacity={0.3} />
+        </mesh>
+      </group>
+
+      {/* SHARP OUTLINE: Stays external to group rotation to remain a perfect circle */}
+      <mesh ref={ringRef}>
+        {/* Inner radius 2.51 (just outside globe), outer 2.53 (thin stroke) */}
+        <ringGeometry args={[2.51, 2.53, 128]} />
         <meshBasicMaterial
-          color="#10b981"
+          color="#34d399"
           transparent
-          opacity={0.05}
-          side={THREE.BackSide}
+          opacity={0.5}
+          side={THREE.DoubleSide}
         />
       </mesh>
     </group>
@@ -185,17 +205,12 @@ const GlobeModel = () => {
 
 export default function Globe() {
   const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Prevents the canvas/three.js code from rendering during SSR.
-  if (!mounted) {
+  if (!mounted)
     return (
       <div style={{ width: "100%", height: "100vh", background: "#000" }} />
     );
-  }
 
   return (
     <div
@@ -208,18 +223,13 @@ export default function Globe() {
       }}
     >
       <GlobeErrorBoundary>
-        <Canvas
-          camera={{ position: [0, 0, 6], fov: 45 }}
-          dpr={[1, 2]}
-          gl={{ antialias: true, alpha: true }}
-        >
+        <Canvas camera={{ position: [0, 0, 6], fov: 45 }} dpr={[1, 2]}>
           <Suspense fallback={null}>
             <GlobeModel />
           </Suspense>
         </Canvas>
       </GlobeErrorBoundary>
 
-      {/* Hero Text Overlay */}
       <div
         style={{
           position: "absolute",
