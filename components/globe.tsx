@@ -1,23 +1,64 @@
 "use client";
 
-import React, { useRef, useEffect, useState, Suspense, Component } from "react";
-import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import {
+  useRef,
+  useEffect,
+  useState,
+  Suspense,
+  Component,
+  type ReactNode,
+} from "react";
+import {
+  Canvas,
+  useFrame,
+  useLoader,
+  type RootState,
+} from "@react-three/fiber";
 import * as THREE from "three";
+
+/* eslint-disable react/no-unknown-property */
+// react-three-fiber's JSX props (position, args, attach, depthWrite, etc.)
+// aren't real DOM attributes, so ESLint's default react/no-unknown-property
+// rule flags every one of them as a false positive. Disabling it for this
+// file is the quick fix. The permanent, project-wide fix is to extend your
+// eslint config instead, e.g. in eslint.config.js / .eslintrc.json:
+//
+//   {
+//     rules: {
+//       "react/no-unknown-property": ["error", {
+//         ignore: ["args", "attach", "position", "rotation", "scale",
+//                  "intensity", "dpr", "gl", "side", "depthWrite", "blending"]
+//       }]
+//     }
+//   }
+
+interface GlobeErrorBoundaryProps {
+  children: ReactNode;
+}
+interface GlobeErrorBoundaryState {
+  hasError: boolean;
+}
 
 // ---------------------------------------------------------------------------
 // GlobeErrorBoundary: Handles texture load failures.
 // ---------------------------------------------------------------------------
-class GlobeErrorBoundary extends Component {
-  constructor(props) {
+class GlobeErrorBoundary extends Component<
+  GlobeErrorBoundaryProps,
+  GlobeErrorBoundaryState
+> {
+  constructor(props: GlobeErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
   }
-  static getDerivedStateFromError() {
+
+  static getDerivedStateFromError(): GlobeErrorBoundaryState {
     return { hasError: true };
   }
-  componentDidCatch(error) {
+
+  componentDidCatch(error: Error) {
     console.error("Globe failed to render:", error);
   }
+
   render() {
     if (this.state.hasError) {
       return (
@@ -44,23 +85,34 @@ class GlobeErrorBoundary extends Component {
   }
 }
 
+interface GlobePointsData {
+  land: Float32Array;
+  ocean: Float32Array;
+}
+
 const GlobeModel = () => {
-  const groupRef = useRef(null);
-  const ringRef = useRef(null);
+  const groupRef = useRef<THREE.Group>(null);
+  const ringRef = useRef<THREE.Mesh>(null);
 
   // Path preserved as requested
   const mapTexture = useLoader(THREE.TextureLoader, "/earth-mask.png");
 
-  const [pointsData, setPointsData] = useState(null);
+  const [pointsData, setPointsData] = useState<GlobePointsData | null>(null);
   const [landCount, setLandCount] = useState(0);
   const [oceanCount, setOceanCount] = useState(0);
 
   useEffect(() => {
     if (!mapTexture || !mapTexture.image) return;
 
-    const img = mapTexture.image;
+    // Guards against setting state after this effect's owner has
+    // unmounted (e.g. fast route changes, React Strict Mode's
+    // mount -> unmount -> remount cycle in dev).
+    let active = true;
+
+    const img = mapTexture.image as HTMLImageElement;
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
+    if (!ctx) return; // getContext can return null — must check before use
 
     canvas.width = img.width;
     canvas.height = img.height;
@@ -78,8 +130,8 @@ const GlobeModel = () => {
 
     const count = 25000;
     const radius = 2.5;
-    const landPositions = [];
-    const oceanPositions = [];
+    const landPositions: number[] = [];
+    const oceanPositions: number[] = [];
     const goldenAngle = Math.PI * (3 - Math.sqrt(5));
 
     for (let i = 0; i < count; i++) {
@@ -114,19 +166,25 @@ const GlobeModel = () => {
       }
     }
 
-    setPointsData({
-      land: new Float32Array(landPositions),
-      ocean: new Float32Array(oceanPositions),
-    });
-    setLandCount(landPositions.length / 3);
-    setOceanCount(oceanPositions.length / 3);
+    if (active) {
+      setPointsData({
+        land: new Float32Array(landPositions),
+        ocean: new Float32Array(oceanPositions),
+      });
+      setLandCount(landPositions.length / 3);
+      setOceanCount(oceanPositions.length / 3);
+    }
+
+    return () => {
+      active = false;
+    };
   }, [mapTexture]);
 
-  useFrame((state) => {
+  useFrame((state: RootState) => {
     if (groupRef.current) {
       groupRef.current.rotation.y += 0.002;
     }
-    // Make the ring outline always face the camera (Billboarding)
+    // Make the ring outline always face the camera (billboarding)
     if (ringRef.current) {
       ringRef.current.quaternion.copy(state.camera.quaternion);
     }
@@ -207,10 +265,11 @@ export default function Globe() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  if (!mounted)
+  if (!mounted) {
     return (
       <div style={{ width: "100%", height: "100vh", background: "#000" }} />
     );
+  }
 
   return (
     <div
@@ -240,22 +299,7 @@ export default function Globe() {
           fontFamily: "Inter, system-ui, sans-serif",
           pointerEvents: "none",
         }}
-      >
-        <h1
-          style={{
-            letterSpacing: "0.4em",
-            fontSize: "clamp(1.5rem, 5vw, 3rem)",
-            fontWeight: "800",
-            textTransform: "uppercase",
-            margin: 0,
-          }}
-        >
-          Developer Galaxy
-        </h1>
-        <p style={{ opacity: 0.5, letterSpacing: "0.1em", marginTop: "1rem" }}>
-          Explore the open source universe
-        </p>
-      </div>
+      />
     </div>
   );
 }
