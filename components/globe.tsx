@@ -12,6 +12,7 @@ import {
   Canvas,
   useFrame,
   useLoader,
+  useThree,
   type RootState,
 } from "@react-three/fiber";
 import * as THREE from "three";
@@ -88,6 +89,40 @@ class GlobeErrorBoundary extends Component<
 interface GlobePointsData {
   land: Float32Array;
   ocean: Float32Array;
+}
+
+// ---------------------------------------------------------------------------
+// ResponsiveCamera: keeps the whole globe (radius 2.5 + ring 2.53, plus a
+// little padding) fully in view no matter what aspect ratio the container
+// ends up with — like CSS `object-fit: contain`. A PerspectiveCamera's
+// vertical fit only depends on fov + distance, but its horizontal fit
+// shrinks as the container gets narrower than it is tall, so we pull the
+// camera back further whenever aspect < 1 to compensate.
+// ---------------------------------------------------------------------------
+function ResponsiveCamera({
+  targetRadius = 2.9,
+  fov = 45,
+}: {
+  targetRadius?: number;
+  fov?: number;
+}) {
+  const camera = useThree((s) => s.camera);
+  const size = useThree((s) => s.size);
+
+  useEffect(() => {
+    if (!(camera instanceof THREE.PerspectiveCamera)) return;
+
+    const aspect = size.width / size.height;
+    const fovRad = (fov * Math.PI) / 180;
+    const tanHalfFov = Math.tan(fovRad / 2);
+    const distance = targetRadius / (tanHalfFov * Math.min(aspect, 1));
+
+    camera.fov = fov;
+    camera.position.set(0, 0, distance);
+    camera.updateProjectionMatrix();
+  }, [camera, size, targetRadius, fov]);
+
+  return null;
 }
 
 const GlobeModel = () => {
@@ -193,7 +228,7 @@ const GlobeModel = () => {
   if (!pointsData || landCount === 0) return null;
 
   return (
-    <group position={[0, -2.5, 0]}>
+    <group position={[0, 0, 0]}>
       {/* Container for rotating elements */}
       <group ref={groupRef}>
         {/* Ocean Layer */}
@@ -261,28 +296,46 @@ const GlobeModel = () => {
   );
 };
 
-export default function Globe() {
+interface GlobeProps {
+  /** Any valid CSS width value, e.g. "100%", "600px", "40vw" */
+  width?: string | number;
+  /** Any valid CSS height value, e.g. "100vh", "600px", "50vh" */
+  height?: string | number;
+  /** Optional extra class names for the wrapper div */
+  className?: string;
+}
+
+export default function Globe({
+  width = "100%",
+  height = "100vh",
+  className,
+}: GlobeProps) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
   if (!mounted) {
     return (
-      <div style={{ width: "100%", height: "100vh", background: "#000" }} />
+      <div
+        className={className}
+        style={{ width, height, background: "#000" }}
+      />
     );
   }
 
   return (
     <div
+      className={className}
       style={{
-        width: "100%",
-        height: "100vh",
+        width,
+        height,
         backgroundColor: "#000",
         position: "relative",
         overflow: "hidden",
       }}
     >
       <GlobeErrorBoundary>
-        <Canvas camera={{ position: [0, 0, 6], fov: 45 }} dpr={[1, 2]}>
+        <Canvas camera={{ position: [0, 0, 7], fov: 45 }} dpr={[1, 2]}>
+          <ResponsiveCamera />
           <Suspense fallback={null}>
             <GlobeModel />
           </Suspense>
