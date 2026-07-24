@@ -3,8 +3,15 @@
 import React, { useState } from "react";
 import Globe from "../globe";
 
+const missions = [
+  { name: "Orbit UI", stack: "TypeScript · React", contributors: "18 builders", status: "3 good-first issues" },
+  { name: "Prism Cache", stack: "Rust · WebAssembly", contributors: "7 builders", status: "Maintainer online" },
+  { name: "Kindred", stack: "Python · AI tooling", contributors: "24 builders", status: "2 review requests" },
+];
+
 const Landing = () => {
   const [exploring, setExploring] = useState(false);
+  const [selectedMission, setSelectedMission] = useState(0);
 
   return (
     <div className="relative h-full w-full overflow-hidden bg-[#020806] text-white selection:bg-emerald-300 selection:text-black">
@@ -21,7 +28,7 @@ const Landing = () => {
           <a className="transition hover:text-emerald-300" href="#constellation">Constellation</a>
           <a className="transition hover:text-emerald-300" href="#about">About</a>
         </nav>
-        <button className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-white/80 backdrop-blur transition hover:border-emerald-300/60 hover:text-emerald-200" type="button">Sign in</button>
+        <button onClick={() => setExploring(true)} className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-white/80 backdrop-blur transition hover:border-emerald-300/60 hover:text-emerald-200" type="button">Join the orbit</button>
       </header>
 
       {/* Hero text */}
@@ -76,6 +83,33 @@ const Landing = () => {
       />
 
       <p id="about" className="absolute bottom-[6.5rem] left-6 z-10 hidden max-w-[12rem] text-[10px] uppercase leading-5 tracking-[0.16em] text-white/35 lg:block">A living map of open source collaboration.</p>
+
+      <aside aria-label="Open source missions" className={`absolute inset-y-0 right-0 z-30 w-full max-w-md border-l border-white/10 bg-[#07110d]/95 p-6 shadow-2xl backdrop-blur-xl transition-transform duration-500 sm:p-8 ${exploring ? "translate-x-0" : "translate-x-full"}`}>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-emerald-300">Mission control</p>
+            <h2 className="mt-2 text-2xl font-bold tracking-tight text-white">Find your next orbit.</h2>
+            <p className="mt-2 text-sm leading-6 text-white/55">Fresh collaboration signals, picked for builders ready to contribute.</p>
+          </div>
+          <button onClick={() => setExploring(false)} className="grid h-9 w-9 place-items-center rounded-full border border-white/10 text-lg text-white/65 transition hover:border-emerald-300/60 hover:text-emerald-200" type="button" aria-label="Close mission control">×</button>
+        </div>
+
+        <div className="mt-8 space-y-3">
+          {missions.map((mission, index) => (
+            <button key={mission.name} onClick={() => setSelectedMission(index)} className={`w-full rounded-xl border p-4 text-left transition ${selectedMission === index ? "border-emerald-300/60 bg-emerald-300/10" : "border-white/10 bg-white/[0.03] hover:border-white/25"}`} type="button">
+              <div className="flex items-center justify-between gap-3"><span className="font-semibold text-white">{mission.name}</span><span className="h-2 w-2 rounded-full bg-emerald-300" /></div>
+              <p className="mt-1 text-xs text-white/45">{mission.stack}</p>
+              <p className="mt-3 text-[11px] font-medium text-emerald-200/85">{mission.status} · {mission.contributors}</p>
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-6 rounded-xl border border-dashed border-emerald-300/25 bg-emerald-300/[0.04] p-4">
+          <p className="text-xs font-semibold text-white">Ready to make contact?</p>
+          <p className="mt-1 text-xs leading-5 text-white/50">We&apos;ll save {missions[selectedMission].name} to your launchpad.</p>
+          <button className="mt-4 w-full rounded-lg bg-emerald-300 px-4 py-2.5 text-xs font-bold text-emerald-950 transition hover:bg-emerald-200" type="button">Add to launchpad</button>
+        </div>
+      </aside>
     </div>
   );
 };

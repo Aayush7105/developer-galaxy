@@ -17,7 +17,6 @@ import {
 } from "@react-three/fiber";
 import * as THREE from "three";
 
-/* eslint-disable react/no-unknown-property */
 // react-three-fiber's JSX props (position, args, attach, depthWrite, etc.)
 // aren't real DOM attributes, so ESLint's default react/no-unknown-property
 // rule flags every one of them as a false positive. Disabling it for this
@@ -117,6 +116,8 @@ function ResponsiveCamera({
     const tanHalfFov = Math.tan(fovRad / 2);
     const distance = targetRadius / (tanHalfFov * Math.min(aspect, 1));
 
+    // The camera is an imperative Three.js object managed by the canvas.
+    // eslint-disable-next-line react-hooks/immutability
     camera.fov = fov;
     camera.position.set(0, 0, distance);
     camera.updateProjectionMatrix();
@@ -163,7 +164,7 @@ const GlobeModel = () => {
       }
     }
 
-    const count = 25000;
+    const count: number = 25000;
     const radius = 2.5;
     const landPositions: number[] = [];
     const oceanPositions: number[] = [];
@@ -202,6 +203,9 @@ const GlobeModel = () => {
     }
 
     if (active) {
+      // This is the texture loader's completion effect; the derived point
+      // cloud must be stored to trigger the first render.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPointsData({
         land: new Float32Array(landPositions),
         ocean: new Float32Array(oceanPositions),
@@ -238,6 +242,7 @@ const GlobeModel = () => {
               <bufferAttribute
                 key={`ocean-${pointsData.ocean.length}`}
                 attach="attributes-position"
+                args={[pointsData.ocean, 3]}
                 count={oceanCount}
                 array={pointsData.ocean}
                 itemSize={3}
@@ -256,10 +261,11 @@ const GlobeModel = () => {
         {/* Land Layer */}
         <points>
           <bufferGeometry>
-            <bufferAttribute
-              key={`land-${pointsData.land.length}`}
-              attach="attributes-position"
-              count={landCount}
+              <bufferAttribute
+                key={`land-${pointsData.land.length}`}
+                attach="attributes-position"
+                args={[pointsData.land, 3]}
+                count={landCount}
               array={pointsData.land}
               itemSize={3}
             />
@@ -311,7 +317,11 @@ export default function Globe({
   className,
 }: GlobeProps) {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    // Client-only canvas avoids server rendering WebGL.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   if (!mounted) {
     return (
