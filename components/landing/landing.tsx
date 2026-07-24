@@ -24,9 +24,9 @@ const Landing = () => {
           Dev Galaxy
         </a>
         <nav className="hidden items-center gap-7 text-xs font-medium text-white/55 md:flex">
-          <a className="transition hover:text-emerald-300" href="#signals">Signals</a>
-          <a className="transition hover:text-emerald-300" href="#constellation">Constellation</a>
-          <a className="transition hover:text-emerald-300" href="#about">About</a>
+          <a className="transition hover:text-emerald-300" href="/signals">Signals</a>
+          <a className="transition hover:text-emerald-300" href="/constellation">Constellation</a>
+          <a className="transition hover:text-emerald-300" href="/about">About</a>
         </nav>
         <button onClick={() => setExploring(true)} className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-white/80 backdrop-blur transition hover:border-emerald-300/60 hover:text-emerald-200" type="button">Join the orbit</button>
       </header>
@@ -47,7 +47,7 @@ const Landing = () => {
           <button onClick={() => setExploring(true)} className="rounded-full bg-emerald-300 px-5 py-3 text-xs font-bold text-emerald-950 transition hover:bg-emerald-200" type="button">
             {exploring ? "Exploration started" : "Start exploring"} <span aria-hidden="true">→</span>
           </button>
-          <a href="#signals" className="rounded-full border border-white/15 bg-black/20 px-5 py-3 text-xs font-bold text-white/80 backdrop-blur transition hover:border-white/35 hover:bg-white/10">View live signals</a>
+          <a href="/signals" className="rounded-full border border-white/15 bg-black/20 px-5 py-3 text-xs font-bold text-white/80 backdrop-blur transition hover:border-white/35 hover:bg-white/10">View live signals</a>
         </div>
       </div>
 
