@@ -1,18 +1,54 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Globe from "../globe";
 
 const Landing = () => {
+  const [exploring, setExploring] = useState(false);
+
   return (
-    <div className="relative h-full w-full">
+    <div className="relative h-full w-full overflow-hidden bg-[#020806] text-white selection:bg-emerald-300 selection:text-black">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_15%,rgba(16,185,129,0.14),transparent_28%),radial-gradient(circle_at_8%_80%,rgba(20,184,166,0.08),transparent_22%)]" />
+      <div className="pointer-events-none absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(52,211,153,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,0.07)_1px,transparent_1px)] [background-size:48px_48px] [mask-image:linear-gradient(to_bottom,black,transparent_72%)]" />
+
+      <header className="absolute inset-x-0 top-0 z-20 flex items-center justify-between px-6 py-6 sm:px-10 lg:px-14">
+        <a href="#top" className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-white">
+          <span className="grid h-8 w-8 place-items-center rounded-full border border-emerald-300/60 bg-emerald-300/10 text-sm text-emerald-300">✦</span>
+          Dev Galaxy
+        </a>
+        <nav className="hidden items-center gap-7 text-xs font-medium text-white/55 md:flex">
+          <a className="transition hover:text-emerald-300" href="#signals">Signals</a>
+          <a className="transition hover:text-emerald-300" href="#constellation">Constellation</a>
+          <a className="transition hover:text-emerald-300" href="#about">About</a>
+        </nav>
+        <button className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-white/80 backdrop-blur transition hover:border-emerald-300/60 hover:text-emerald-200" type="button">Sign in</button>
+      </header>
+
       {/* Hero text */}
-      <div className="absolute inset-x-0 top-[30%] z-10 flex flex-col items-center px-6 text-center">
-        <h1 className="text-2xl font-extrabold uppercase tracking-[0.4em] text-white sm:text-3xl">
-          Developer Galaxy
+      <div id="top" className="absolute inset-x-0 top-[18%] z-10 flex flex-col items-center px-6 text-center sm:top-[20%]">
+        <div className="mb-5 flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/5 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-200/90 backdrop-blur">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-300" />
+          8,412 builders online now
+        </div>
+        <h1 className="max-w-3xl text-4xl font-extrabold uppercase leading-[0.95] tracking-[0.12em] text-white sm:text-5xl lg:text-6xl">
+          Build where ideas<br /><span className="text-emerald-300">become constellations.</span>
         </h1>
-        <p className="mt-4 text-sm tracking-wider text-white/50">
-          Explore the open source universe
+        <p className="mt-6 max-w-md text-sm leading-6 tracking-wide text-white/55">
+          Find your next open-source orbit. Connect with people turning curious commits into meaningful momentum.
         </p>
+        <div className="mt-7 flex flex-wrap justify-center gap-3">
+          <button onClick={() => setExploring(true)} className="rounded-full bg-emerald-300 px-5 py-3 text-xs font-bold text-emerald-950 transition hover:bg-emerald-200" type="button">
+            {exploring ? "Exploration started" : "Start exploring"} <span aria-hidden="true">→</span>
+          </button>
+          <a href="#signals" className="rounded-full border border-white/15 bg-black/20 px-5 py-3 text-xs font-bold text-white/80 backdrop-blur transition hover:border-white/35 hover:bg-white/10">View live signals</a>
+        </div>
       </div>
+
+      <section id="signals" className="absolute inset-x-0 bottom-5 z-20 mx-auto grid w-[min(92%,960px)] grid-cols-3 overflow-hidden rounded-2xl border border-white/10 bg-black/35 backdrop-blur-md sm:bottom-8">
+        <div className="border-r border-white/10 px-3 py-3 text-center sm:px-6 sm:py-4"><p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-white/45">Active repos</p><p className="mt-1 text-base font-semibold text-white sm:text-lg">24.8k</p></div>
+        <div className="border-r border-white/10 px-3 py-3 text-center sm:px-6 sm:py-4"><p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-white/45">Merges today</p><p className="mt-1 text-base font-semibold text-white sm:text-lg">1,384</p></div>
+        <div id="constellation" className="px-3 py-3 text-center sm:px-6 sm:py-4"><p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-white/45">Open missions</p><p className="mt-1 text-base font-semibold text-white sm:text-lg">392</p></div>
+      </section>
 
       {/*
         Half globe peeking from the bottom edge.
@@ -38,6 +74,8 @@ const Landing = () => {
         height="90vh"
         className="absolute bottom-0 left-1/2 aspect-square h-[90vh] w-[150%] -translate-x-1/2 translate-y-1/2"
       />
+
+      <p id="about" className="absolute bottom-[6.5rem] left-6 z-10 hidden max-w-[12rem] text-[10px] uppercase leading-5 tracking-[0.16em] text-white/35 lg:block">A living map of open source collaboration.</p>
     </div>
   );
 };
