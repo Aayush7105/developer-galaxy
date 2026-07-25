@@ -2,11 +2,18 @@
 
 import React, { useState } from "react";
 import Globe from "../globe";
+import { SaveToLaunchpadButton, type Project } from "../launchpad";
 
 const missions = [
   { name: "Orbit UI", stack: "TypeScript · React", contributors: "18 builders", status: "3 good-first issues" },
   { name: "Prism Cache", stack: "Rust · WebAssembly", contributors: "7 builders", status: "Maintainer online" },
   { name: "Kindred", stack: "Python · AI tooling", contributors: "24 builders", status: "2 review requests" },
+];
+
+const launchpadMissions: Project[] = [
+  { name: "Orbit UI", category: "Interface systems", builders: 18, stack: "TypeScript", description: "A thoughtful toolkit for product teams building calm, capable interfaces.", signal: "3 good-first issues" },
+  { name: "Prism Cache", category: "Data infrastructure", builders: 7, stack: "Rust", description: "Fast, inspectable caching primitives for the edge and beyond.", signal: "Maintainer online" },
+  { name: "Kindred", category: "AI tooling", builders: 24, stack: "Python", description: "Small, composable tools for teams making AI useful in the real world.", signal: "2 review requests" },
 ];
 
 const Landing = () => {
@@ -26,6 +33,7 @@ const Landing = () => {
         <nav className="hidden items-center gap-7 text-xs font-medium text-white/55 md:flex">
           <a className="transition hover:text-emerald-300" href="/signals">Signals</a>
           <a className="transition hover:text-emerald-300" href="/constellation">Constellation</a>
+          <a className="transition hover:text-emerald-300" href="/launchpad">Launchpad</a>
           <a className="transition hover:text-emerald-300" href="/about">About</a>
         </nav>
         <button onClick={() => setExploring(true)} className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-white/80 backdrop-blur transition hover:border-emerald-300/60 hover:text-emerald-200" type="button">Join the orbit</button>
@@ -107,7 +115,7 @@ const Landing = () => {
         <div className="mt-6 rounded-xl border border-dashed border-emerald-300/25 bg-emerald-300/[0.04] p-4">
           <p className="text-xs font-semibold text-white">Ready to make contact?</p>
           <p className="mt-1 text-xs leading-5 text-white/50">We&apos;ll save {missions[selectedMission].name} to your launchpad.</p>
-          <button className="mt-4 w-full rounded-lg bg-emerald-300 px-4 py-2.5 text-xs font-bold text-emerald-950 transition hover:bg-emerald-200" type="button">Add to launchpad</button>
+          <SaveToLaunchpadButton project={launchpadMissions[selectedMission]} className="mt-4 w-full border-0 bg-emerald-300 text-emerald-950 hover:bg-emerald-200 hover:text-emerald-950" />
         </div>
       </aside>
     </div>

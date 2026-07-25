@@ -1,15 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { SaveToLaunchpadButton, type Project } from "@/components/launchpad";
 
-export type Project = {
-  name: string;
-  category: string;
-  builders: number;
-  stack: string;
-  description: string;
-  signal: string;
-};
+export type { Project } from "@/components/launchpad";
 
 const stacks = ["All stacks", "TypeScript", "Rust", "Python", "JavaScript", "Go", "React"];
 
@@ -65,6 +59,7 @@ export function ConstellationBrowser({ projects }: { projects: Project[] }) {
               <p className="mt-4 min-h-10 text-xs leading-5 text-white/55">{project.description}</p>
               <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4 text-xs text-white/55"><span>{project.stack}</span><span>{project.builders} builders</span></div>
               <p className="mt-4 text-[11px] font-medium text-emerald-200/85">{project.signal}</p>
+              <SaveToLaunchpadButton project={project} className="mt-5 w-full" />
             </article>;
           })}
         </div>

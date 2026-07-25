@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 const navItems = [
   { href: "/signals", label: "Signals" },
   { href: "/constellation", label: "Constellation" },
+  { href: "/launchpad", label: "Launchpad" },
   { href: "/about", label: "About" },
 ];
 
