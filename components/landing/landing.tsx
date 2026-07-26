@@ -41,18 +41,18 @@ const Landing = () => {
           <nav className="hidden items-center gap-6 text-xs font-medium text-white/70 md:flex">
             <Link className="transition hover:text-emerald-300 hover:scale-105" href="/signals">Signals</Link>
             <Link className="transition hover:text-emerald-300 hover:scale-105" href="/constellation">Constellation</Link>
+            <Link className="transition hover:text-emerald-300 hover:scale-105 font-bold text-emerald-300" href="/command-center">3D Command</Link>
             <Link className="transition hover:text-emerald-300 hover:scale-105" href="/launchpad">Launchpad</Link>
             <Link className="transition hover:text-emerald-300 hover:scale-105" href="/about">About</Link>
           </nav>
 
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => setExploring(true)}
+            <Link
+              href="/command-center"
               className="rounded-full border border-emerald-300/50 bg-emerald-300/10 px-4 py-2 text-xs font-semibold text-emerald-300 backdrop-blur transition-all duration-300 hover:border-emerald-300 hover:bg-emerald-300 hover:text-emerald-950 hover:shadow-[0_0_20px_rgba(52,211,153,0.4)]"
-              type="button"
             >
-              Join the orbit
-            </button>
+              ✦ 3D Command Center
+            </Link>
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -68,6 +68,7 @@ const Landing = () => {
         {mobileMenuOpen && (
           <div className="glass-panel mt-2 rounded-2xl p-4 md:hidden">
             <nav className="flex flex-col gap-2 text-sm">
+              <Link className="rounded-xl px-4 py-2 transition hover:bg-white/5 text-white/80 hover:text-emerald-300 font-bold text-emerald-300" href="/command-center" onClick={() => setMobileMenuOpen(false)}>✦ 3D Command Center</Link>
               <Link className="rounded-xl px-4 py-2 transition hover:bg-white/5 text-white/80 hover:text-emerald-300" href="/signals" onClick={() => setMobileMenuOpen(false)}>Signals</Link>
               <Link className="rounded-xl px-4 py-2 transition hover:bg-white/5 text-white/80 hover:text-emerald-300" href="/constellation" onClick={() => setMobileMenuOpen(false)}>Constellation</Link>
               <Link className="rounded-xl px-4 py-2 transition hover:bg-white/5 text-white/80 hover:text-emerald-300" href="/launchpad" onClick={() => setMobileMenuOpen(false)}>Launchpad</Link>
@@ -94,14 +95,13 @@ const Landing = () => {
         </p>
 
         <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <button
-            onClick={() => setExploring(true)}
-            className="group rounded-full bg-emerald-300 px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-emerald-950 transition-all duration-300 hover:bg-emerald-200 emerald-glow-sm hover:scale-105 hover:shadow-[0_0_25px_rgba(52,211,153,0.5)]"
-            type="button"
+          <Link
+            href="/command-center"
+            className="group rounded-full bg-emerald-300 px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-emerald-950 transition-all duration-300 hover:bg-emerald-200 emerald-glow-sm hover:scale-105 hover:shadow-[0_0_25px_rgba(52,211,153,0.5)] flex items-center gap-2"
           >
-            {exploring ? "Exploration active" : "Start exploring"}{" "}
+            Launch 3D Command Center{" "}
             <span className="inline-block transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
-          </button>
+          </Link>
           <Link
             href="/signals"
             className="glass-card rounded-full px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-white/90 hover:text-emerald-200 hover:scale-105"

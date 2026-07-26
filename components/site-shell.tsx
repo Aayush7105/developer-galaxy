@@ -7,6 +7,7 @@ import React, { useState, type ReactNode } from "react";
 const navItems = [
   { href: "/signals", label: "Signals" },
   { href: "/constellation", label: "Constellation" },
+  { href: "/command-center", label: "3D Command" },
   { href: "/launchpad", label: "Launchpad" },
   { href: "/about", label: "About" },
 ];
@@ -54,10 +55,10 @@ export function SiteShell({ children }: { children: ReactNode }) {
 
           <div className="flex items-center gap-3">
             <Link
-              href="/"
+              href="/command-center"
               className="hidden rounded-full border border-emerald-300/40 bg-emerald-300/10 px-4 py-2 text-xs font-semibold text-emerald-300 transition-all duration-300 hover:border-emerald-300 hover:bg-emerald-300 hover:text-emerald-950 hover:shadow-[0_0_20px_rgba(52,211,153,0.3)] sm:inline-block"
             >
-              Explore Orbit
+              ✦ Launch 3D Command
             </Link>
 
             {/* Mobile menu toggle button */}
