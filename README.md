@@ -50,6 +50,14 @@ npm run build   # Create a production build
 npm run start   # Serve the production build
 ```
 
+## Data and persistence
+
+No environment variables are required to start the app.
+
+- The **Signals** feed requests the public GitHub Events API for a small, fixed set of popular repositories. Responses are revalidated every five minutes.
+- Saved Launchpad missions, progress states, and notes stay in the browser's `localStorage` under `dev-galaxy-launchpad`. They are not synced to a server or shared between devices.
+- Command-center audio is generated in the browser through the Web Audio API after user interaction; no audio assets are downloaded.
+
 ## Project structure
 
 ```text
@@ -63,3 +71,19 @@ lib/                         GitHub signal fetching and audio utilities
 ## Notes
 
 The Signals page uses GitHub's public API. If the API is unavailable or rate-limited, the feed can be empty until the next successful refresh. The 3D Command Center needs a browser with WebGL support.
+
+## Troubleshooting
+
+| Symptom | What to try |
+| --- | --- |
+| The 3D scene is blank | Use a current browser with WebGL enabled, then reload the page. |
+| The Signals feed has no entries | GitHub may be temporarily unavailable or rate-limited; wait for a later refresh. |
+| A saved mission is missing | Launchpad data is local to the current browser profile. Check that browser storage has not been cleared. |
+| The dev server behaves unexpectedly | Remove `.next`, reinstall dependencies, and run `npm run dev` again. |
+
+## Contributing
+
+1. Create a branch for the change.
+2. Keep interactive browser behavior in focused Client Components; routes and static content can remain Server Components.
+3. Run `npm run lint` before opening a pull request.
+4. Include a short description and screenshots for visible UI changes.
