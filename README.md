@@ -87,3 +87,8 @@ The Signals page uses GitHub's public API. If the API is unavailable or rate-lim
 2. Keep interactive browser behavior in focused Client Components; routes and static content can remain Server Components.
 3. Run `npm run lint` before opening a pull request.
 4. Include a short description and screenshots for visible UI changes.
+
+## Recent updates
+
+- Stabilized the command-center star field so it does not change when React re-renders.
+- Documented local persistence, GitHub data refresh behavior, and common browser requirements.
