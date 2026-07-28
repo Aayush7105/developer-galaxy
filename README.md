@@ -1,102 +1,65 @@
-# 🌌 Developer Galaxy
+# Developer Galaxy
 
-> **An Immersive 3D Sci-Fi Command Center & Developer Telemetry Dashboard**
+Developer Galaxy is an interactive map for discovering open-source projects, following live repository activity, and saving contribution ideas. It pairs a polished, responsive interface with a WebGL command center built with React Three Fiber.
 
-Developer Galaxy is a futuristic, highly interactive 3D web application built with **Next.js 16**, **React 19**, **Three.js**, and **React Three Fiber**. It presents a sci-fi command center interface featuring real-time telemetry visualizers, dynamic 3D constellations, live GitHub activity feeds, synthesized spatial audio FX, and sci-fi HUD controls.
+## Highlights
 
----
+- **3D Command Center** — Explore an animated reactor, orbiting technology nodes, a stable procedural star field, and a tactical grid.
+- **Live Signals** — Fetches recent public activity from selected GitHub repositories, with a five-minute revalidation window.
+- **Project Constellation** — Browse curated projects by category, stack, and contribution signal.
+- **Personal Launchpad** — Save projects and turn them into a focused contribution queue.
+- **Responsive experience** — Includes a compact mobile navigation and a non-3D fallback while the command center loads.
 
-## ✨ Features
+## Tech stack
 
-- 🛸 **Sci-Fi 3D Command Center**: Core reactor animations, space starfield particle environments, and interactive orbital node networks rendered via `@react-three/fiber` and `@react-three/drei`.
-- 🛰️ **Constellation Browser**: Interactive 3D node network exploring developer technologies, module relationships, and system architecture.
-- 📡 **Live Signals Feed & GitHub Stream**: Real-time event monitor detailing developer pulses, commit logs, build metrics, and live activity feeds.
-- 🚀 **Interactive Launchpad**: Mission control dashboard for initiating sub-modules, inspecting active projects, and triggering system diagnostics.
-- 🌍 **Interactive 3D Telemetry Globe**: Rotating 3D WebGL globe visualizing global developer nodes, signal hotspots, and orbital telemetry data.
-- 🔊 **Synthesized Spatial Audio (Web Audio API)**: Built-in procedural audio engine providing sci-fi click FX, ambient hums, scan sweeps, and reactor state sound effects without external audio files.
-- 🎨 **Modern Futuristic UI/UX**: Dark mode sci-fi HUD aesthetics with glassmorphism, glowing telemetry indicators, dynamic hover mechanics, and responsive layouts.
+- Next.js 16 (App Router) and React 19
+- TypeScript and Tailwind CSS v4
+- Three.js, `@react-three/fiber`, and `@react-three/drei`
+- Native Web Audio API for procedural command-center effects
 
----
+## Routes
 
-## 🛠️ Tech Stack
+| Route | Purpose |
+| --- | --- |
+| `/` | Landing page and mission-control drawer |
+| `/signals` | Recent public GitHub activity |
+| `/constellation` | Curated project explorer |
+| `/command-center` | Interactive 3D technology map |
+| `/launchpad` | Saved project queue |
+| `/about` | Product principles |
 
-- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
-- **UI Library**: [React 19](https://react.dev/)
-- **3D Graphics & Canvas**: [Three.js](https://threejs.org/), [@react-three/fiber](https://r3f.docs.pmnd.rs/), [@react-three/drei](https://github.com/pmndrs/drei)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Audio Engine**: Native Web Audio API (Procedural sound synthesis)
+## Run locally
 
----
+Prerequisite: Node.js 20.9 or later.
 
-## 📂 Project Structure
-
-```
-developer-galaxy/
-├── app/                      # Next.js App Router routes & layouts
-│   ├── command-center/       # 3D Sci-Fi Command Center page
-│   ├── constellation/        # Interactive 3D constellation browser
-│   ├── launchpad/            # Mission launchpad dashboard
-│   ├── signals/              # Real-time telemetry signals feed
-│   ├── about/                # Mission background & overview
-│   ├── layout.tsx            # Root layout wrapper
-│   └── page.tsx              # Landing page entry point
-├── components/               # React & R3F visual components
-│   ├── command-center/       # Core reactor, HUD panels, canvas & space env
-│   ├── landing/              # Interactive hero landing visualizer
-│   ├── constellation-browser.tsx
-│   ├── github-live-feed.tsx
-│   ├── globe.tsx             # Interactive WebGL 3D Globe
-│   ├── launchpad.tsx
-│   ├── signals-feed.tsx
-│   └── site-shell.tsx        # Navigation & shell frame
-├── lib/                      # Audio synth & data providers
-│   ├── command-center-audio.ts # Web Audio API sound FX synth engine
-│   └── github-signals.ts      # Live activity mock & signal data stream
-└── public/                   # Static assets
+```bash
+git clone https://github.com/Aayush7105/developer-galaxy.git
+cd developer-galaxy
+npm install
+npm run dev
 ```
 
----
+Open [http://localhost:3000](http://localhost:3000).
 
-## 🚀 Getting Started
+## Scripts
 
-### Prerequisites
+```bash
+npm run dev     # Start the local development server
+npm run lint    # Run ESLint
+npm run build   # Create a production build
+npm run start   # Serve the production build
+```
 
-Ensure you have Node.js (version 18.x or higher recommended) installed.
+## Project structure
 
-### Installation
+```text
+app/                         Route pages and root layout
+components/command-center/   WebGL canvas, HUD, environment, and nodes
+components/landing/          Landing experience
+components/                  Shared shell, feeds, globe, and project UI
+lib/                         GitHub signal fetching and audio utilities
+```
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/Aayush7105/developer-galaxy.git
-   cd developer-galaxy
-   ```
+## Notes
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-
-3. **Run the development server**:
-   ```bash
-   npm run dev
-   ```
-
-4. **Open in browser**:
-   Navigate to `http://localhost:3000` to access the application.
-
----
-
-## 📜 Available Scripts
-
-- `npm run dev`: Starts the Next.js development server.
-- `npm run build`: Compiles and builds the production bundle.
-- `npm run start`: Runs the compiled production build locally.
-- `npm run lint`: Executes ESLint checks across the codebase.
-
----
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
+The Signals page uses GitHub's public API. If the API is unavailable or rate-limited, the feed can be empty until the next successful refresh. The 3D Command Center needs a browser with WebGL support.
