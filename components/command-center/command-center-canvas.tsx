@@ -53,8 +53,8 @@ function CameraRig({ selectedNode, cameraPreset }: CameraRigProps) {
   useFrame((state) => {
     if (!controlsRef.current) return;
 
-    let targetPos = new THREE.Vector3(0, 0, 18);
-    let lookTarget = new THREE.Vector3(0, 0, 0);
+    const targetPos = new THREE.Vector3(0, 0, 18);
+    const lookTarget = new THREE.Vector3(0, 0, 0);
 
     if (selectedNode) {
       const [nx, ny, nz] = selectedNode.position;

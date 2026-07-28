@@ -278,7 +278,7 @@ export function CommandCenterHUD({
             <div className="flex items-start justify-between border-b border-slate-800 pb-3">
               <div>
                 <span className="text-[10px] font-mono uppercase text-emerald-400 tracking-wider">
-                  // Selected Node Telemetry
+                  {"// Selected Node Telemetry"}
                 </span>
                 <h3 className="text-base font-bold text-white font-mono flex items-center gap-2">
                   {selectedNode.name}

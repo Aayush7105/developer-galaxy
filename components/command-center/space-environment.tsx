@@ -9,6 +9,12 @@ interface SpaceEnvironmentProps {
   showGrid?: boolean;
 }
 
+// A deterministic generator keeps the star field stable when React re-renders.
+function seededRandom(seed: number) {
+  const value = Math.sin(seed * 12.9898) * 43758.5453;
+  return value - Math.floor(value);
+}
+
 export function SpaceEnvironment({
   showParticles = true,
   showGrid = true,
@@ -30,15 +36,15 @@ export function SpaceEnvironment({
     ];
 
     for (let i = 0; i < count; i++) {
-      const radius = 20 + Math.random() * 60;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
+      const radius = 20 + seededRandom(i * 4 + 1) * 60;
+      const theta = seededRandom(i * 4 + 2) * Math.PI * 2;
+      const phi = Math.acos(2 * seededRandom(i * 4 + 3) - 1);
 
       positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
       positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
       positions[i * 3 + 2] = radius * Math.cos(phi);
 
-      const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+      const color = colorPalette[Math.floor(seededRandom(i * 4 + 4) * colorPalette.length)];
       colors[i * 3] = color.r;
       colors[i * 3 + 1] = color.g;
       colors[i * 3 + 2] = color.b;
