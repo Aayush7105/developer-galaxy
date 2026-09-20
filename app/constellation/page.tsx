@@ -11,5 +11,5 @@ const projects: Project[] = [
 ];
 
 export default function ConstellationPage() {
-  return <SiteShell><section className="mx-auto max-w-6xl px-6 pb-16 pt-12 sm:px-10"><p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">Project constellation</p><div className="mt-3"><h1 className="text-4xl font-bold tracking-tight sm:text-6xl">Find your people.</h1><p className="mt-5 max-w-xl leading-7 text-white/55">Clusters of projects with momentum, clear contribution paths, and maintainers who are listening.</p></div><ConstellationBrowser projects={projects} /></section></SiteShell>;
+  return <SiteShell><section className="page-frame"><p className="eyebrow">Project constellation</p><h1 className="page-title">Find your people.</h1><p className="page-copy">Clusters of projects with momentum, clear contribution paths, and maintainers who are listening.</p><ConstellationBrowser projects={projects} /></section></SiteShell>;
 }
