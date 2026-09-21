@@ -1,31 +1,49 @@
 import Link from "next/link";
+import { SiteShell } from "@/components/site-shell";
 
 export default function NotFound() {
   return (
-    <main className="relative grid min-h-screen place-items-center overflow-hidden px-6 py-16 text-white">
-      <div className="site-grid pointer-events-none absolute inset-0 opacity-60" />
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-500/15 blur-[100px]" />
+    <SiteShell>
+      <section className="page-frame">
+        <p className="eyebrow">Navigation signal · 404</p>
+        <div className="mt-5 flex items-end gap-4 sm:gap-6">
+          <p className="font-mono text-6xl font-bold leading-none tracking-[-0.1em] text-emerald-300 sm:text-8xl">404</p>
+          <div className="mb-1 hidden h-px flex-1 bg-gradient-to-r from-emerald-300/50 to-transparent sm:block" />
+          <p className="mb-0.5 font-mono text-[10px] font-bold tracking-[0.16em] text-emerald-200/70">ROUTE LOST</p>
+        </div>
+        <h1 className="page-title max-w-3xl">This sector is uncharted.</h1>
+        <p className="page-copy">The route you followed is not part of the current Developer Galaxy map. Choose a live signal below and continue exploring open source.</p>
 
-      <section className="orbit-panel relative w-full max-w-2xl rounded-3xl px-6 py-12 text-center sm:px-12 sm:py-16">
-        <p className="eyebrow">Navigation anomaly · Error 404</p>
-        <p className="mt-7 font-mono text-[clamp(5rem,20vw,10rem)] font-bold leading-none tracking-[-0.12em] text-indigo-200/90">
-          404
-        </p>
-        <h1 className="mt-6 text-3xl font-semibold tracking-[-0.05em] sm:text-5xl">
-          This sector is uncharted.
-        </h1>
-        <p className="mx-auto mt-5 max-w-lg text-base leading-7 text-white/60">
-          The page you&apos;re looking for drifted beyond our current map. Return to a known constellation and continue exploring.
-        </p>
-        <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-          <Link href="/" className="rounded-full bg-indigo-200 px-5 py-3 text-sm font-semibold text-indigo-950 transition hover:bg-white">
-            Return to home
-          </Link>
-          <Link href="/constellation" className="rounded-full border border-white/15 bg-white/[.04] px-5 py-3 text-sm font-semibold text-white/80 transition hover:border-indigo-200/60 hover:text-white">
-            Explore constellations
-          </Link>
+        <div className="mt-12 grid gap-4 md:grid-cols-[1.3fr_.7fr]">
+          <div className="orbit-panel rounded-2xl p-6 sm:p-8">
+            <div className="flex items-center justify-between border-b border-white/10 pb-5">
+              <p className="text-sm font-semibold text-white">Recovery coordinates</p>
+              <span className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-2.5 py-1 font-mono text-[10px] font-bold tracking-wider text-emerald-200">ONLINE</span>
+            </div>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <Link href="/" className="glass-card rounded-xl p-5 text-left">
+                <p className="font-mono text-[10px] font-bold tracking-[0.14em] text-emerald-200/70">01 · BASE</p>
+                <p className="mt-4 text-base font-semibold">Return home</p>
+                <p className="mt-2 text-sm leading-6 text-white/50">Start a new exploration from the galaxy overview.</p>
+              </Link>
+              <Link href="/constellation" className="glass-card rounded-xl p-5 text-left">
+                <p className="font-mono text-[10px] font-bold tracking-[0.14em] text-emerald-200/70">02 · DISCOVER</p>
+                <p className="mt-4 text-base font-semibold">Browse constellations</p>
+                <p className="mt-2 text-sm leading-6 text-white/50">Find projects with a clear path to contribute.</p>
+              </Link>
+            </div>
+          </div>
+
+          <aside className="rounded-2xl border border-emerald-300/20 bg-emerald-300/[0.045] p-6 sm:p-8">
+            <p className="font-mono text-[10px] font-bold tracking-[0.16em] text-emerald-200/70">SYSTEM STATUS</p>
+            <div className="mt-7 space-y-4 text-sm">
+              <div className="flex items-center justify-between border-b border-white/10 pb-3"><span className="text-white/55">Galaxy map</span><span className="font-mono text-xs text-emerald-200">ACTIVE</span></div>
+              <div className="flex items-center justify-between border-b border-white/10 pb-3"><span className="text-white/55">Route lookup</span><span className="font-mono text-xs text-rose-200">NOT FOUND</span></div>
+              <div className="flex items-center justify-between"><span className="text-white/55">Next move</span><span className="font-mono text-xs text-indigo-200">READY</span></div>
+            </div>
+          </aside>
         </div>
       </section>
-    </main>
+    </SiteShell>
   );
 }
