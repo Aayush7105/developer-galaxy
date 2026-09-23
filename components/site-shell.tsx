@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 const navItems = [
   { href: "/signals", label: "Signals" },
@@ -17,6 +17,8 @@ export function SiteShell({ children }: { children: ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const commandInputRef = useRef<HTMLInputElement>(null);
+  const quickJumpButtonRef = useRef<HTMLButtonElement>(null);
   const visibleItems = navItems.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()));
 
   useEffect(() => {
@@ -34,13 +36,31 @@ export function SiteShell({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
+  useEffect(() => {
+    if (!commandOpen) return;
+    commandInputRef.current?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Tab") return;
+      const dialog = commandInputRef.current?.closest("section");
+      const focusable = dialog?.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), input:not([disabled])');
+      if (!focusable?.length) return;
+      const first = focusable[0]; const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [commandOpen, visibleItems.length]);
+
   const closeCommand = () => {
     setCommandOpen(false);
     setQuery("");
+    requestAnimationFrame(() => quickJumpButtonRef.current?.focus());
   };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#050711] text-white selection:bg-indigo-300 selection:text-indigo-950">
+      <a href="#main-content" className="skip-link">Skip to main content</a>
       <div className="site-grid pointer-events-none absolute inset-0 opacity-60" />
       <header className="relative z-50 mx-auto max-w-7xl px-6 sm:px-10">
         <div className="flex items-center justify-between border-b border-white/10 py-5">
@@ -77,7 +97,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
           </section>
         </div>
       )}
-      <main className="relative z-10">{children}</main>
+      <main id="main-content" tabIndex={-1} className="relative z-10">{children}</main>
     </div>
   );
 }

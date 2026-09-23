@@ -23,6 +23,10 @@ html {
   scroll-behavior: smooth;
 }
 
+:focus-visible { outline: 2px solid #a7f3d0; outline-offset: 3px; }
+.skip-link { position: fixed; top: .75rem; left: .75rem; z-index: 200; transform: translateY(-200%); border-radius: .5rem; background: #a7f3d0; padding: .65rem .9rem; color: #022c22; font-size: .75rem; font-weight: 700; }
+.skip-link:focus { transform: translateY(0); }
+
 body::before { position: fixed; z-index: -2; inset: 0; content: ""; background: radial-gradient(circle at 14% 0%, rgba(100,92,255,.19), transparent 31rem), radial-gradient(circle at 88% 20%, rgba(48,208,177,.1), transparent 28rem), #050711; }
 .site-grid { background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); background-size: 42px 42px; mask-image: linear-gradient(to bottom, black, transparent 88%); }
 .page-frame { max-width: 76rem; margin: 0 auto; padding: 4.5rem 1.5rem 5rem; }
@@ -88,6 +92,11 @@ body::before { position: fixed; z-index: -2; inset: 0; content: ""; background: 
   );
   background-size: 200% 100%;
   animation: shimmer 3s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
 
 /* Glassmorphism Design Utilities */
