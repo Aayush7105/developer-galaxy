@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 const navItems = [
   { href: "/signals", label: "Signals" },
@@ -15,6 +15,29 @@ const navItems = [
 export function SiteShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [commandOpen, setCommandOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const visibleItems = navItems.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()));
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setCommandOpen((open) => !open);
+      }
+      if (event.key === "Escape") {
+        setCommandOpen(false);
+        setQuery("");
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  const closeCommand = () => {
+    setCommandOpen(false);
+    setQuery("");
+  };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#050711] text-white selection:bg-indigo-300 selection:text-indigo-950">
@@ -27,9 +50,12 @@ export function SiteShell({ children }: { children: ReactNode }) {
               <Link key={item.href} href={item.href} className={`rounded-full px-3 py-2 transition-colors ${pathname === item.href ? "bg-white/10 text-white" : "text-white/55 hover:text-white"}`}>{item.label}</Link>
             ))}
           </nav>
-          <button onClick={() => setMobileMenuOpen((open) => !open)} className="text-sm text-white/70 transition hover:text-white md:hidden" aria-label="Toggle navigation menu" type="button">
-            {mobileMenuOpen ? "×" : "Menu"}
-          </button>
+          <div className="flex items-center gap-3">
+            <button onClick={() => setCommandOpen(true)} className="hidden items-center gap-2 rounded-lg border border-white/10 bg-white/[.035] px-2.5 py-1.5 text-[11px] text-white/45 transition hover:border-indigo-200/50 hover:text-white sm:flex" type="button" aria-label="Open quick navigation"><span>Quick jump</span><kbd className="rounded border border-white/10 px-1 font-mono text-[9px] text-white/45">⌘ K</kbd></button>
+            <button onClick={() => setMobileMenuOpen((open) => !open)} className="text-sm text-white/70 transition hover:text-white md:hidden" aria-label="Toggle navigation menu" type="button">
+              {mobileMenuOpen ? "×" : "Menu"}
+            </button>
+          </div>
         </div>
         {mobileMenuOpen && (
           <div className="orbit-panel border-x border-b border-white/10 px-4 py-4 md:hidden">
@@ -41,6 +67,16 @@ export function SiteShell({ children }: { children: ReactNode }) {
           </div>
         )}
       </header>
+      {commandOpen && (
+        <div className="fixed inset-0 z-[100] grid place-items-start bg-[#02030a]/75 px-4 pt-[18vh] backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Quick navigation">
+          <button className="absolute inset-0 cursor-default" onClick={closeCommand} aria-label="Close quick navigation" type="button" />
+          <section className="relative w-full max-w-xl overflow-hidden rounded-2xl border border-indigo-200/20 bg-[#0a0d1c] shadow-2xl shadow-black/60">
+            <div className="flex items-center gap-3 border-b border-white/10 px-4 py-3"><span className="text-indigo-200">⌕</span><input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Jump to a destination..." className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/35" /><kbd className="rounded border border-white/10 px-1.5 py-0.5 font-mono text-[10px] text-white/40">ESC</kbd></div>
+            <div className="p-2"><p className="px-2 pb-2 pt-1 text-[10px] font-bold uppercase tracking-[.15em] text-white/35">Navigate</p>{visibleItems.length ? visibleItems.map((item, index) => <Link key={item.href} href={item.href} onClick={closeCommand} className={`flex items-center justify-between rounded-xl px-3 py-3 text-sm transition ${pathname === item.href ? "bg-indigo-300/10 text-indigo-100" : "text-white/70 hover:bg-white/[.06] hover:text-white"}`}><span className="flex items-center gap-3"><span className="grid h-6 w-6 place-items-center rounded-md border border-white/10 text-[10px] text-white/45">{String(index + 1).padStart(2, "0")}</span>{item.label}</span><span className="text-xs text-white/30">Open →</span></Link>) : <p className="px-3 py-8 text-center text-sm text-white/45">No destination found.</p>}</div>
+            <div className="flex justify-between border-t border-white/10 px-4 py-2.5 text-[10px] text-white/35"><span>Developer Galaxy navigation</span><span>Type to filter</span></div>
+          </section>
+        </div>
+      )}
       <main className="relative z-10">{children}</main>
     </div>
   );
