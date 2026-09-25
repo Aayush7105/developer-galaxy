@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { GitHubSignal } from "@/lib/github-signals";
+import type { GitHubSignal } from "@/backend/github/signals";
 
 const filters = ["All", "Code", "Community", "Release"] as const;
 const accents = ["bg-emerald-300", "bg-cyan-300", "bg-violet-300", "bg-amber-300", "bg-sky-300", "bg-pink-300"];

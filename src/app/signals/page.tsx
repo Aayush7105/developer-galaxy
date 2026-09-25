@@ -1,6 +1,6 @@
-import { SiteShell } from "@/components/shared/site-shell";
-import { GitHubLiveFeed } from "@/components/signals/github-live-feed";
-import { getGitHubSignals } from "@/lib/github-signals";
+import { SiteShell } from "@/frontend/components/shared/site-shell";
+import { GitHubLiveFeed } from "@/frontend/components/signals/github-live-feed";
+import { getGitHubSignals } from "@/backend/github/signals";
 
 export default async function SignalsPage() {
   const signals = await getGitHubSignals();

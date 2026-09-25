@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SiteShell } from "@/components/shared/site-shell";
+import { SiteShell } from "@/frontend/components/shared/site-shell";
 
 export default function NotFound() {
   return (

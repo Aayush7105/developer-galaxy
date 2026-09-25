@@ -4,7 +4,7 @@ import React, { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
-import { commandAudio } from "@/lib/command-center-audio";
+import { commandAudio } from "@/frontend/command-center-audio";
 
 export interface TechNodeData {
   id: string;

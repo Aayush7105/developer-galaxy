@@ -2,14 +2,14 @@
 
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import { SiteShell } from "@/components/shared/site-shell";
-import { COMMAND_NODES, type TechNodeData } from "@/components/command-center/interactive-nodes";
-import { CommandCenterHUD } from "@/components/command-center/command-center-hud";
+import { SiteShell } from "@/frontend/components/shared/site-shell";
+import { COMMAND_NODES, type TechNodeData } from "@/frontend/components/command-center/interactive-nodes";
+import { CommandCenterHUD } from "@/frontend/components/command-center/command-center-hud";
 
 // Dynamically import Canvas with SSR disabled
 const DynamicCommandCenterCanvas = dynamic(
   () =>
-    import("@/components/command-center/command-center-canvas").then(
+    import("@/frontend/components/command-center/command-center-canvas").then(
       (mod) => mod.CommandCenterCanvas
     ),
   {

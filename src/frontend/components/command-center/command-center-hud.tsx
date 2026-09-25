@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { COMMAND_NODES, type TechNodeData } from "./interactive-nodes";
-import { commandAudio } from "@/lib/command-center-audio";
+import { commandAudio } from "@/frontend/command-center-audio";
 
 interface CommandCenterHUDProps {
   selectedNode: TechNodeData | null;

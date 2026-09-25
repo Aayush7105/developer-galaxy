@@ -1,4 +1,4 @@
-import { SiteShell } from "@/components/shared/site-shell";
+import { SiteShell } from "@/frontend/components/shared/site-shell";
 
 const principles = [
   ["Make a clear first move", "Every project should show newcomers where they can help."],
