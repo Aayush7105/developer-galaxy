@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import { SiteShell } from "@/components/site-shell";
+import { SiteShell } from "@/components/shared/site-shell";
 import { COMMAND_NODES, type TechNodeData } from "@/components/command-center/interactive-nodes";
 import { CommandCenterHUD } from "@/components/command-center/command-center-hud";
 

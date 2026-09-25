@@ -1,5 +1,5 @@
-import { SiteShell } from "@/components/site-shell";
-import { ConstellationBrowser, type Project } from "@/components/constellation-browser";
+import { SiteShell } from "@/components/shared/site-shell";
+import { ConstellationBrowser, type Project } from "@/components/constellation/constellation-browser";
 
 const projects: Project[] = [
   { name: "Orbit UI", category: "Interface systems", builders: 18, stack: "TypeScript", description: "A thoughtful toolkit for product teams building calm, capable interfaces.", signal: "3 good-first issues" },

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Globe from "../globe";
+import Globe from "./globe";
 
 const navItems = [
   { href: "/signals", label: "Signals" },

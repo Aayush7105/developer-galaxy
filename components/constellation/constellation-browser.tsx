@@ -1,9 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { SaveToLaunchpadButton, type Project } from "@/components/launchpad";
+import { SaveToLaunchpadButton, type Project } from "@/components/launchpad/launchpad";
 
-export type { Project } from "@/components/launchpad";
+export type { Project } from "@/components/launchpad/launchpad";
 
 const stacks = ["All stacks", "TypeScript", "Rust", "Python", "JavaScript", "Go", "React"];
 

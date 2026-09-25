@@ -1,5 +1,5 @@
-import { SiteShell } from "@/components/site-shell";
-import { GitHubLiveFeed } from "@/components/github-live-feed";
+import { SiteShell } from "@/components/shared/site-shell";
+import { GitHubLiveFeed } from "@/components/signals/github-live-feed";
 import { getGitHubSignals } from "@/lib/github-signals";
 
 export default async function SignalsPage() {
