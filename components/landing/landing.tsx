@@ -40,22 +40,22 @@ export default function Landing() {
         </Link>
       </header>
 
-      <main className="relative z-10 mx-auto flex min-h-[calc(100vh-96px)] max-w-6xl flex-col justify-between px-6 pb-10 pt-20 lg:px-8 lg:pt-28">
+      <main className="relative z-10 mx-auto flex min-h-[calc(100vh-96px)] max-w-6xl flex-col justify-between px-6 pb-10 pt-16 sm:pt-20 lg:px-8 lg:pt-28">
         <section className="max-w-2xl">
-          <p className="mb-6 text-[11px] font-bold uppercase tracking-[0.2em] text-indigo-200/85">Open-source intelligence layer</p>
+          <div className="mb-6 flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.2em] text-indigo-200/85"><span className="h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_18px_rgba(110,231,183,.9)]" />Open-source intelligence layer</div>
           <h1 className="text-5xl font-semibold leading-[.92] tracking-[-0.07em] text-white sm:text-7xl">A better orbit for <span className="text-indigo-200">builders.</span></h1>
           <p className="mt-7 max-w-lg text-base leading-7 text-white/60">Find communities with real momentum, clear contribution paths, and room for your next useful idea.</p>
-          <div className="mt-9 flex flex-wrap items-center gap-6">
+          <div className="mt-9 flex flex-wrap items-center gap-4 sm:gap-6">
             <Link href="/signals" className="rounded-full bg-indigo-200 px-5 py-2.5 text-sm font-semibold text-indigo-950 transition hover:bg-white">Explore signals</Link>
             <Link href="/launchpad" className="text-sm text-white/60 transition hover:text-white">View launchpad <span aria-hidden="true">→</span></Link>
           </div>
         </section>
 
-        <section className="orbit-panel mt-20 grid max-w-2xl grid-cols-3 rounded-2xl p-5 sm:mt-0">
+        <section aria-label="Developer Galaxy activity" className="orbit-panel mt-16 grid max-w-2xl grid-cols-3 rounded-2xl p-4 sm:mt-0 sm:p-5">
           {stats.map((stat) => (
             <div key={stat.label} className="border-r border-white/10 px-3 first:pl-0 last:border-0">
               <p className="text-base font-medium tracking-tight text-white sm:text-lg">{stat.value}</p>
-              <p className="mt-1 text-[9px] uppercase tracking-[0.12em] text-white/45">{stat.label}</p>
+              <p className="mt-1 text-[8px] uppercase tracking-[0.1em] text-white/45 sm:text-[9px] sm:tracking-[0.12em]">{stat.label}</p>
             </div>
           ))}
         </section>
