@@ -24,7 +24,7 @@ export default function Landing() {
 
       <header className="relative z-20 mx-auto flex max-w-6xl items-center justify-between px-6 py-7 lg:px-8">
         <Link href="/" className="flex items-center gap-2 text-sm font-semibold tracking-tight text-white">
-          <span className="grid h-6 w-6 place-items-center rounded-full border border-indigo-300/60 text-[10px] text-indigo-200">✦</span> Developer Galaxy
+          <span className="grid h-6 w-6 place-items-center rounded-full border border-indigo-300/60 text-[10px] text-indigo-200">&#10022;</span> Developer Galaxy
         </Link>
 
         <nav className="hidden items-center gap-6 text-xs text-white/55 sm:flex">
@@ -47,7 +47,7 @@ export default function Landing() {
           <p className="mt-7 max-w-lg text-base leading-7 text-white/60">Find communities with real momentum, clear contribution paths, and room for your next useful idea.</p>
           <div className="mt-9 flex flex-wrap items-center gap-4 sm:gap-6">
             <Link href="/signals" className="rounded-full bg-indigo-200 px-5 py-2.5 text-sm font-semibold text-indigo-950 transition hover:bg-white">Explore signals</Link>
-            <Link href="/launchpad" className="text-sm text-white/60 transition hover:text-white">View launchpad <span aria-hidden="true">→</span></Link>
+            <Link href="/launchpad" className="text-sm text-white/60 transition hover:text-white">View launchpad <span aria-hidden="true">&rarr;</span></Link>
           </div>
         </section>
 
