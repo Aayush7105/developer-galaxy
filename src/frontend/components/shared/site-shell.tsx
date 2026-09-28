@@ -9,6 +9,7 @@ const navItems = [
   { href: "/constellation", label: "Constellation" },
   { href: "/command-center", label: "3D Command" },
   { href: "/launchpad", label: "Launchpad" },
+  { href: "/leaderboard", label: "Leaderboard" },
   { href: "/about", label: "About" },
 ];
 
